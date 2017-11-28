@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 # author: qh
 # date: 2017/11/28
+# 原版本为python2.7，待改编为python3
 import numpy as np
 import matplotlib.pyplot as plt
 import torch

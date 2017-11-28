@@ -49,7 +49,7 @@ criterion = nn.MSELoss()
 # 例子  optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)  
 # 使用SGD（随机梯度下降）优化，学习率为0.001，动量为0.9
 # 此处的1e-3代表 0.001，即10的-3次方
-optimizer = optim.SGD(model.parameters(), lr = 1e-3)
+optimizer = optim.SGD(model.parameters(), lr = 1e-2)
 
 # 定义总的循环次数
 num_epochs = 1000

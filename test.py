@@ -37,10 +37,14 @@ class LinearRegression(nn.Module):
         return out
 
 # 如果cuda可用则用cuda加速
-if torch.cuda.is_available():
-    model = LinearRegression().cuda()
-else:
-    model = LinearRegression()
+model = LinearRegression()
+model = torch.nn.DataParallel(model).cuda()
+#model = LinearRegression().cuda()
+
+# if torch.cuda.is_available():
+#     model = LinearRegression().cuda()
+# else:
+#     model = LinearRegression()
 
 # 定义损失函数，nn.MSELoss代表平方损失函数
 criterion = nn.MSELoss()
@@ -55,12 +59,14 @@ optimizer = optim.SGD(model.parameters(), lr = 1e-2)
 num_epochs = 1000
 # 循环
 for epoch in range(num_epochs):
-    if torch.cuda.is_available():
-        inputs = Variable(x_train).cuda()
-        target = Variable(y_train).cuda()
-    else:
-        inputs = Variable(x_train)
-        target = Variable(y_train)
+    # if torch.cuda.is_available():
+    #     inputs = Variable(x_train).cuda()
+    #     target = Variable(y_train).cuda()
+    # else:
+    #     inputs = Variable(x_train)
+    #     target = Variable(y_train)
+    inputs = Variable(x_train).cuda()
+    target = Variable(y_train).cuda()
 
     # forward向前反馈
     # 得到网络向前传播的结果Out
@@ -84,8 +90,9 @@ for epoch in range(num_epochs):
 # 将模型变成测试模式(有一些层在测试与训练的时候是不一样的,比如Dropout,BatchNormalization) 
 model.eval()
 
+# print(Variable(x_train))
 predict = model(Variable(x_train))
-predict = predict.data.numpy()
+predict = predict.data.cpu().numpy()
 
 # 画图
 plt.plot(x_train.numpy(), y_train.numpy(), 'ro', label='Original data')

@@ -37,14 +37,14 @@ class LinearRegression(nn.Module):
         return out
 
 # 如果cuda可用则用cuda加速
-model = LinearRegression()
-model = torch.nn.DataParallel(model).cuda()
-#model = LinearRegression().cuda()
-
-# if torch.cuda.is_available():
-#     model = LinearRegression().cuda()
-# else:
-#     model = LinearRegression()
+# class torch.nn.DataParallel(module, device_ids=None, output_device=None, dim=0)[source]
+# 在模块级别上实现数据并行。
+# http://pytorch-cn.readthedocs.io/zh/latest/package_references/torch-nn/#torchnn
+if torch.cuda.is_available():
+    model = LinearRegression()
+    model = torch.nn.DataParallel(model).cuda()
+else:
+    model = LinearRegression()
 
 # 定义损失函数，nn.MSELoss代表平方损失函数
 criterion = nn.MSELoss()
@@ -59,14 +59,12 @@ optimizer = optim.SGD(model.parameters(), lr = 1e-2)
 num_epochs = 1000
 # 循环
 for epoch in range(num_epochs):
-    # if torch.cuda.is_available():
-    #     inputs = Variable(x_train).cuda()
-    #     target = Variable(y_train).cuda()
-    # else:
-    #     inputs = Variable(x_train)
-    #     target = Variable(y_train)
-    inputs = Variable(x_train).cuda()
-    target = Variable(y_train).cuda()
+    if torch.cuda.is_available():
+        inputs = Variable(x_train).cuda()
+        target = Variable(y_train).cuda()
+    else:
+        inputs = Variable(x_train)
+        target = Variable(y_train)
 
     # forward向前反馈
     # 得到网络向前传播的结果Out

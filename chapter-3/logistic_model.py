@@ -1,5 +1,5 @@
 """
-Logistic 回归
+3-3 Logistic 回归
 author: qianhao
 """
 import torch
@@ -8,6 +8,7 @@ from torch.autograd import Variable
 import numpy as np
 import matplotlib.pyplot as plt
 
+# 给一个随机种子
 torch.manual_seed(2017)
 
 with open('data.txt', 'r') as f:
@@ -80,3 +81,13 @@ for epoch in range(50000):
         print('loss is {:.4f}'.format(print_loss))
         print('acc is {:.4f}'.format(acc))
 
+torch.save(logistic_model.state_dict, './logistic_regression.pth')
+# ====================plot classification=================
+w0, w1 = logistic_model.lr.weight[0]
+w0 = w0.data[0]
+w1 = w1.data[0]
+b = logistic_model.lr.bias.data[0]
+plot_x = np.arange(30, 100, 0.1)
+plot_y = (-w0 * plot_x - b) / w1
+plt.plot(plot_x, plot_y)
+plt.show()

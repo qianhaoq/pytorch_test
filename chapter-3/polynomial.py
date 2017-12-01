@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 # author: qh
 # date: 2017/11/28
-# 多项式回归
+# 3-2 多项式回归
 import numpy as np
 import matplotlib.pyplot as plt
 import torch

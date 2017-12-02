@@ -68,8 +68,11 @@ for epoch in range(50000):
     out = logistic_model(x)
     loss = criterion(out, y)
     print_loss = loss.data[0]
+    # >=0.5则为1,小于0.5为0
     mask = out.ge(0.5).float()
+    # 与输入的标记位做对比，计算正确的个数
     correct = (mask == y).sum()
+    # 计算得出准确率
     acc = correct.data[0] / x.size(0)
     # backward
     optimizer.zero_grad()

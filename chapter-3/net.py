@@ -18,6 +18,7 @@ class simpleNet(nn.Module):
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
+        return x
 
 
 class Activation_Net(nn.Module):
@@ -38,6 +39,7 @@ class Activation_Net(nn.Module):
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
+        return x
 
 
 class Batch_Net(nn.Module):
@@ -62,3 +64,4 @@ class Batch_Net(nn.Module):
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
+        return x

@@ -4,10 +4,14 @@ import torchvision.datasets as dsets
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 from torch.autograd import Variable
+import time
 
 # Hyper Parameters
+# 循环次数
 num_epochs = 20
+# 每批训练的样本数量
 batch_size = 128
+# 学习速率
 learning_rate = 1e-3
 
 img_transforms = transforms.Compose(
@@ -21,6 +25,7 @@ test_dataset = dsets.MNIST(
     root='./data/', train=False, transform=img_transforms)
 
 # Data Loader (Input Pipeline)
+# shuffle表示是否需要随机取样本
 train_loader = DataLoader(
     dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
@@ -33,6 +38,7 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.layer1 = nn.Sequential(
+            # 输入深度1,输出深度16,卷积核大小3*3,0个像素点的填充
             nn.Conv2d(1, 16, kernel_size=3),  # b, 16, 26, 26
             nn.BatchNorm2d(16),
             nn.ReLU(inplace=True))
@@ -67,12 +73,18 @@ class CNN(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
+        print(x)
+        print("x.view " + "="*40)
         x = x.view(x.size(0), -1)
+        print(x)
         x = self.fc(x)
+        exit()
         return x
 
-
+# 记录程序运行时间
+start = time.time()
 cnn = CNN()
+# cnn = AlexNet()
 if torch.cuda.is_available():
     cnn.cuda()
 
@@ -119,4 +131,6 @@ print('Test Accuracy of the model on the 10000 test images: %.4f ' %
       (correct / total))
 
 # Save the Trained Model
-torch.save(cnn.state_dict(), 'cnn.pth')
+# torch.save(cnn.state_dict(), 'cnn.pth')
+elapsed = (time.time() - start)
+print(("Time used:",elapsed))

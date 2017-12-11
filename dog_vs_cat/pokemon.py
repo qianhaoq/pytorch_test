@@ -18,10 +18,10 @@ def create_dir(dir_name):
         os.makedirs(dir_name)
 
 # 定义数据路径
-root_dir = os.getcwd() + '/data/'
-# root_dir = os.getcwd() + '/pokemon/'
+# root_dir = os.getcwd() + '/data/'
+root_dir = os.getcwd() + '/pokemon/'
 
-raw_dir = root_dir + 'raw/'
+# raw_dir = root_dir + 'raw/'
 train_dir = root_dir + 'train/'
 # 验证集图片文件夹
 test_dir = root_dir + 'test/'
@@ -36,66 +36,66 @@ create_dir(train_dir)
 create_dir(test_dir)
 
 # 预处理，将train的图片分别移到dog和cat下
-train_dog_dir = train_dir + 'dog/'
-create_dir(train_dog_dir)
+# train_dog_dir = train_dir + 'dog/'
+# create_dir(train_dog_dir)
 
-train_cat_dir = train_dir + 'cat/'
-create_dir(train_cat_dir)
+# train_cat_dir = train_dir + 'cat/'
+# create_dir(train_cat_dir)
 
-test_dog_dir = test_dir + 'dog/'
-create_dir(test_dog_dir)
+# test_dog_dir = test_dir + 'dog/'
+# create_dir(test_dog_dir)
 
-test_cat_dir = test_dir + 'cat/'
-create_dir(test_cat_dir)
+# test_cat_dir = test_dir + 'cat/'
+# create_dir(test_cat_dir)
 
-img_list = os.listdir(raw_dir)
+# img_list = os.listdir(raw_dir)
 
-# 预处理函数
-def pre_process():
-    # 狗图片列表和猫图片的列表
-    dog_list = []
-    cat_list = []
+# # 预处理函数
+# def pre_process():
+#     # 狗图片列表和猫图片的列表
+#     dog_list = []
+#     cat_list = []
 
-    # 存入狗列表和猫列表
-    for img in img_list: 
-        if img.split('.')[0] == 'dog':
-            dog_list.append(img)
-        elif img.split('.')[0] == 'cat':
-            cat_list.append(img)
+#     # 存入狗列表和猫列表
+#     for img in img_list: 
+#         if img.split('.')[0] == 'dog':
+#             dog_list.append(img)
+#         elif img.split('.')[0] == 'cat':
+#             cat_list.append(img)
 
-    # 根据rate比例分配训练集和测试集
-    # dog
-    for i in range(len(dog_list)):
-        img_path = raw_dir + dog_list[i]
-        if i < len(dog_list) * 0.9:
-            obj_path = train_dog_dir + dog_list[i]
-        else:
-            obj_path = test_dog_dir + dog_list[i]
-        # shutil.copyfile(img_path, obj_path)
+#     # 根据rate比例分配训练集和测试集
+#     # dog
+#     for i in range(len(dog_list)):
+#         img_path = raw_dir + dog_list[i]
+#         if i < len(dog_list) * 0.9:
+#             obj_path = train_dog_dir + dog_list[i]
+#         else:
+#             obj_path = test_dog_dir + dog_list[i]
+#         # shutil.copyfile(img_path, obj_path)
 
-    # cat    
-    for i in range(len(cat_list)):
-        img_path = raw_dir + cat_list[i]
-        if i < len(cat_list) * 0.9:
-            obj_path = train_cat_dir + cat_list[i]
-        else:
-            obj_path = test_cat_dir + cat_list[i]
-        # shutil.copyfile(img_path, obj_path)
+#     # cat    
+#     for i in range(len(cat_list)):
+#         img_path = raw_dir + cat_list[i]
+#         if i < len(cat_list) * 0.9:
+#             obj_path = train_cat_dir + cat_list[i]
+#         else:
+#             obj_path = test_cat_dir + cat_list[i]
+#         # shutil.copyfile(img_path, obj_path)
 
-def imshow(inp, title=None):
-    """Imshow for Tensor."""
-    inp = inp.numpy().transpose((1, 2, 0))
-    mean = np.array([0.485, 0.456, 0.406])
-    std = np.array([0.229, 0.224, 0.225])
-    inp = std * inp + mean
-    inp = np.clip(inp, 0, 1)
-    plt.imshow(inp)
-    if title is not None:
-        plt.title(title)
-    plt.pause(99)  # pause a bit so that plots are updated
+# def imshow(inp, title=None):
+#     """Imshow for Tensor."""
+#     inp = inp.numpy().transpose((1, 2, 0))
+#     mean = np.array([0.485, 0.456, 0.406])
+#     std = np.array([0.229, 0.224, 0.225])
+#     inp = std * inp + mean
+#     inp = np.clip(inp, 0, 1)
+#     plt.imshow(inp)
+#     if title is not None:
+#         plt.title(title)
+#     plt.pause(99)  # pause a bit so that plots are updated
 
 
-pre_process()
+# pre_process()
 # 定义transforms
 # Transforms are common image transforms.
 data_transforms = {
@@ -125,6 +125,7 @@ data_transforms = {
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
 }
+print(root_dir)
 
 # define datasets
 image_datasets = {
@@ -135,6 +136,8 @@ image_datasets = {
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
 train_class_name = image_datasets['train'].classes
 test_class_name = image_datasets['test'].classes
+print(train_class_name)
+print(test_class_name)
 
 # define dataloader to load images
 batch_size = 32
@@ -143,6 +146,7 @@ dset_loaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=32,
                 for x in ['train', 'test']
 }
 
+print(dset_loaders['train'])
 
 dataloaders = {
     'train':
@@ -165,9 +169,9 @@ data_size = {
     'train': len(dset_loaders['train'].dataset),
     'test': len(dset_loaders['test'].dataset)
 }
-print(data_size)
-print(dset_loaders['train'].dataset.__len__())
-print(dset_loaders['test'].dataset.__len__())
+# print(data_size)
+# print(dset_loaders['train'].dataset.__len__())
+# print(dset_loaders['test'].dataset.__len__())
 # exit()
 # check gpu  
 use_gpu = torch.cuda.is_available()
@@ -196,15 +200,19 @@ if fix_param:
     optimizer = optim.Adam(transfer_model.fc.parameters(), lr=1e-3)
 else:
     optimizer = optim.Adam(transfer_model.parameters(), lr=1e-3)
+
 criterion = nn.CrossEntropyLoss()
+# criterion = nn.BCELoss()
+# criterion = nn.MultiLabelMarginLoss()
 
 # start train
 num_epoch = 10
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):
-#     # print(i)
-#     # print(data)
+#     print(i)
+#     print(data)
+    
 #     break
 # exit()
 
@@ -223,22 +231,18 @@ for epoch in range(num_epoch):
             label = label.cuda()
         img = Variable(img)
         label = Variable(label)
-        print("img == ")
-        print(img)
-        print("label == ")
-        print(label)
+        # print("img == ")
+        # print(img)
+        # print("label == ")
+        # print(label)
 
         # forward
         out = transfer_model(img)
-        print("out == ")
-        print(out)
+        # print("out == ")
+        # print(out)
         loss = criterion(out, label)
-        print(loss)
-
-        exit()
-        # forward
-        # out = transfer_model(img)
-        loss = criterion(out, label)
+        # print(loss)
+        # exit()
         _, pred = torch.max(out, 1)
 
         # backward

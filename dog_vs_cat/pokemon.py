@@ -94,6 +94,90 @@ create_dir(test_dir)
 #         plt.title(title)
 #     plt.pause(99)  # pause a bit so that plots are updated
 
+# CNN Model (2 conv layer)
+class CNN(nn.Module):
+    def __init__(self):
+        super(CNN, self).__init__()
+        self.layer1 = nn.Sequential(
+            # 32 * 3 * 256 * 256
+            # 输入深度3,输出深度16,卷积核大小3*3,0个像素点的填充
+            nn.Conv2d(3, 16, kernel_size=3),  # b, 16, 254, 254
+            nn.BatchNorm2d(16),
+            nn.ReLU(inplace=True))
+
+        self.layer2 = nn.Sequential(
+            # 16 * 254 * 254
+            nn.Conv2d(16, 32, kernel_size=3),  # b, 32, 252, 252
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2)  #b, 32, 126, 126
+        )
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(32, 64, kernel_size=3),  #b, 64, 124, 124
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True))
+
+        self.layer4 = nn.Sequential(
+            nn.Conv2d(64, 128, kernel_size=3),  #b, 128, 122, 122
+            nn.BatchNorm2d(128),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=20)  #b, 128, 61, 61
+        )
+
+        self.fc = nn.Sequential(
+            # nn.Linear(128, 10)
+            
+            nn.Linear(128 * 7 * 7, 1024),
+            nn.ReLU(inplace=True),
+            nn.Linear(1024, 128),
+            nn.ReLU(inplace=True),
+            nn.Linear(128, 10)
+        )
+
+        self.avg_pool = nn.AvgPool2d(7)
+
+
+    def forward(self, x):
+        # print("before " + "="*40)
+        # print(x)
+        # print("layer1 " + "="*40)
+        # x = self.layer1(x)
+        # print(x)
+        # print("layer2 " + "="*40)
+        # x = self.layer2(x)
+        # print(x)
+        # print("layer3 " + "="*40)
+        # x = self.layer3(x)
+        # print(x)
+        # print("layer4 " + "="*40)
+        # x = self.layer4(x)
+        # print(x)
+        # print("avg_pool " + "="*40)
+        # x = self.avg_pool(x)
+        # print(x)
+        # print("x.view " + "="*40)
+        # x = x.view(x.size(0), -1)
+        # print(x)
+        # print("="*40)
+        # exit()
+        # x = self.fc(x)
+        # return x
+
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+        # x = self.avg_pool(x)
+        # print(x)
+        # print("="*40)        
+        x = x.view(x.size(0), -1)
+        # print(x)
+        # print("="*40)
+
+        x = self.fc(x)
+        # print(x)
+        # exit()
+        return x
 
 # pre_process()
 # 定义transforms
@@ -103,7 +187,7 @@ data_transforms = {
     transforms.Compose([
         # Crop the given PIL.Image to random size and aspect ratio
         # 随机裁剪原图并转换到指定的大小
-        transforms.RandomSizedCrop(299),
+        transforms.RandomSizedCrop(256),
         # 50%概率水平翻转
         transforms.RandomHorizontalFlip(),
         # 将pil图片转化为tensor
@@ -116,7 +200,7 @@ data_transforms = {
     transforms.Compose([
         # Crop the given PIL.Image to random size and aspect ratio
         # 随机裁剪原图并转换到指定的大小
-        transforms.RandomSizedCrop(299),
+        transforms.RandomSizedCrop(256),
         # 50%概率水平翻转
         transforms.RandomHorizontalFlip(),
         # 将pil图片转化为tensor
@@ -125,7 +209,7 @@ data_transforms = {
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
 }
-print(root_dir)
+# print(root_dir)
 
 # define datasets
 image_datasets = {
@@ -175,6 +259,7 @@ data_size = {
 # exit()
 # check gpu  
 use_gpu = torch.cuda.is_available()
+use_gpu = False
 # 是否修正全连接层的参数
 fix_param = True
 
@@ -184,24 +269,29 @@ fix_param = True
 # imshow(out, title=[train_class_name[x] for x in classes])
 
 # 定义一个提前训练好参数的res18模型
-transfer_model = models.resnet18(pretrained=True)
+# transfer_model = models.resnet18(pretrained=True)
+transfer_model = CNN()
 
-if fix_param:
-    for param in transfer_model.parameters():
-        param.requires_grad = False
+# if fix_param:
+#     for param in transfer_model.parameters():
+#         param.requires_grad = False
 
-dim_in = transfer_model.fc.in_features
-transfer_model.fc = nn.Linear(dim_in, 2)
+# dim_in = transfer_model.fc.in_features
+# transfer_model.fc = nn.Linear(dim_in, 2)
 if use_gpu:
     transfer_model = transfer_model.cuda()
 
 # define optimize function and loss function
-if fix_param:
-    optimizer = optim.Adam(transfer_model.fc.parameters(), lr=1e-3)
-else:
-    optimizer = optim.Adam(transfer_model.parameters(), lr=1e-3)
+# if fix_param:
+#     optimizer = optim.Adam(transfer_model.fc.parameters(), lr=1e-3)
+# else:
+#     optimizer = optim.Adam(transfer_model.parameters(), lr=1e-3)
+
+optimizer = torch.optim.Adam(transfer_model.parameters(), lr=1e-3)
+
 
 criterion = nn.CrossEntropyLoss()
+# criterion = nn.MSELoss()
 # criterion = nn.BCELoss()
 # criterion = nn.MultiLabelMarginLoss()
 
@@ -235,11 +325,13 @@ for epoch in range(num_epoch):
         # print(img)
         # print("label == ")
         # print(label)
-
+        # exit()
         # forward
         out = transfer_model(img)
         # print("out == ")
         # print(out)
+
+        # exit()
         loss = criterion(out, label)
         # print(loss)
         # exit()
@@ -268,8 +360,11 @@ for epoch in range(num_epoch):
     eval_loss = 0.0
     for data in dset_loaders['test']:
         img, label = data
-        img = Variable(img, volatile=True).cuda()
-        label = Variable(label, volatile=True).cuda()
+        img = Variable(img, volatile=True)
+        label = Variable(label, volatile=True)
+        if use_gpu:
+            img = img.cuda()
+            label = label.cuda()
         out = transfer_model(img)
         _, pred = torch.max(out.data, 1)
         loss = criterion(out, label)

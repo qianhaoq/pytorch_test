@@ -114,9 +114,13 @@ class CNN(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
+        print(x)
+        print("="*40)  
         # x = self.avg_pool(x)
         x = x.view(x.size(0), -1)
         x = self.fc(x)
+        print(x)
+        exit()
         return x
 
 
@@ -151,11 +155,18 @@ for epoch in range(num_epochs):
         # Forward + Backward + Optimize
         optimizer.zero_grad()
         outputs = cnn(images)
+
+        # print("label == ")
+        # print(labels)
+        # print("out == ")
+        # print(outputs)
+        # exit()
         _, correct_label = torch.max(outputs, 1)
         correct_num = (correct_label == labels).sum()
         acc = correct_num.data[0] / labels.size(0)
         loss = criterion(outputs, labels)
         loss.backward()
+
         optimizer.step()
 
         if (i + 1) % 100 == 0:

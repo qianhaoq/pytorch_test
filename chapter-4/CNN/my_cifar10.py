@@ -114,13 +114,13 @@ class CNN(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
-        print(x)
-        print("="*40)  
+        # print(x)
+        # print("="*40)  
         # x = self.avg_pool(x)
         x = x.view(x.size(0), -1)
         x = self.fc(x)
-        print(x)
-        exit()
+        # print(x)
+        # exit()
         return x
 
 

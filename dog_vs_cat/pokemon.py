@@ -224,8 +224,9 @@ print(train_class_name)
 print(test_class_name)
 
 # define dataloader to load images
-batch_size = 32
-dset_loaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=32,
+# batch_size = 32
+batch_size = 24
+dset_loaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size,
                                                shuffle=True, num_workers=4)
                 for x in ['train', 'test']
 }
@@ -259,7 +260,7 @@ data_size = {
 # exit()
 # check gpu  
 use_gpu = torch.cuda.is_available()
-use_gpu = False
+# use_gpu = False
 # 是否修正全连接层的参数
 fix_param = True
 
@@ -269,8 +270,8 @@ fix_param = True
 # imshow(out, title=[train_class_name[x] for x in classes])
 
 # 定义一个提前训练好参数的res18模型
-# transfer_model = models.resnet18(pretrained=True)
-transfer_model = CNN()
+transfer_model = models.resnet18(pretrained=True)
+# transfer_model = CNN()
 
 # if fix_param:
 #     for param in transfer_model.parameters():

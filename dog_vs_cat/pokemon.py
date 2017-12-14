@@ -288,6 +288,7 @@ if use_gpu:
 # else:
 #     optimizer = optim.Adam(transfer_model.parameters(), lr=1e-3)
 
+# optimizer = optim.Adam(transfer_model.fc.parameters(), lr=1e-3)
 optimizer = torch.optim.Adam(transfer_model.parameters(), lr=1e-3)
 
 
@@ -297,7 +298,7 @@ criterion = nn.CrossEntropyLoss()
 # criterion = nn.MultiLabelMarginLoss()
 
 # start train
-num_epoch = 10
+num_epoch = 30
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):
@@ -354,30 +355,60 @@ for epoch in range(num_epoch):
     elips_time = time.time() - since
     print('Loss: {:.6f}, Acc: {:.4f}, Time: {:.0f}s'.format(
         running_loss, running_acc, elips_time))
-    print('Validation')
-    transfer_model.eval()
-    num_correct = 0.0
-    total = 0.0
-    eval_loss = 0.0
-    for data in dset_loaders['test']:
-        img, label = data
-        img = Variable(img, volatile=True)
-        label = Variable(label, volatile=True)
-        if use_gpu:
-            img = img.cuda()
-            label = label.cuda()
-        out = transfer_model(img)
-        _, pred = torch.max(out.data, 1)
-        loss = criterion(out, label)
-        eval_loss += loss.data[0] * label.size(0)
-        num_correct += (pred.cpu() == label.data.cpu()).sum()
-        total += label.size(0)
-    print('Loss: {:.6f} Acc: {:.4f}'.format(eval_loss / total, num_correct /
-                                            total))
-    print()
+    # print('Validation')
+    # transfer_model.eval()
+    # num_correct = 0.0
+    # total = 0.0
+    # eval_loss = 0.0
+    # for data in dset_loaders['test']:
+    #     img, label = data
+    #     img = Variable(img, volatile=True)
+    #     label = Variable(label, volatile=True)
+    #     if use_gpu:
+    #         img = img.cuda()
+    #         label = label.cuda()
+    #     out = transfer_model(img)
+    #     _, pred = torch.max(out.data, 1)
+    #     loss = criterion(out, label)
+    #     eval_loss += loss.data[0] * label.size(0)
+    #     num_correct += (pred.cpu() == label.data.cpu()).sum()
+    #     total += label.size(0)
+    # print('Loss: {:.6f} Acc: {:.4f}'.format(eval_loss / total, num_correct /
+    #                                         total))
+    # print()
 print('Finish Training!')
-print()
-# save_path = os.path.join(root, 'model_save')
-# if not os.path.exists(save_path):
-#     os.mkdir(save_path)
-# torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
+print('start test!')
+transfer_model.eval()
+num_correct = 0.0
+total = 0.0
+eval_loss = 0.0
+for data in dset_loaders['test']:
+    img, label = data
+    img = Variable(img, volatile=True)
+    label = Variable(label, volatile=True)
+    if use_gpu:
+        img = img.cuda()
+        label = label.cuda()
+    out = transfer_model(img)
+    # print("test out")
+    # print(out.data)
+    # print("test label")
+    # print(label)
+    # print("data")
+    # print(data)
+    _, pred = torch.max(out.data, 1)
+    print("图片所属宠物小精灵序号")
+    print(pred + 1)
+    loss = criterion(out, label)
+    eval_loss += loss.data[0] * label.size(0)
+    num_correct += (pred.cpu() == label.data.cpu()).sum()
+    print(num_correct)
+    total += label.size(0)
+    print(total)
+print('Loss: {:.6f} Acc: {:.4f}'.format(eval_loss / total, num_correct /
+                                        total))
+print('end')
+save_path = os.path.join(root_dir, 'model_save')
+if not os.path.exists(save_path):
+    os.mkdir(save_path)
+torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')

@@ -1,4 +1,3 @@
-
 # _author = qh
 import os
 import shutil
@@ -12,18 +11,29 @@ from torch.utils.data import DataLoader
 import torchvision
 from torchvision import models, transforms, datasets
 from torchvision.datasets import ImageFolder
-
+from PIL import Image,ImageFile
+from datetime import datetime
+# solved error:image file is truncated
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def create_dir(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
+def pil_loader(path):
+# open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+    with open(path, 'rb') as f:
+        with Image.open(f) as img:
+            return img.convert('RGB')
+
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
-root_dir = os.getcwd() + '/pokemon/'
+root_dir = os.getcwd() + '/data/'
 
 # raw_dir = root_dir + 'raw/'
 train_dir = root_dir + 'train/'
+# train_dir = '/home/qh/git/comic_crawler/scrawler/pokemon_data/'
+
 # 验证集图片文件夹
 test_dir = root_dir + 'test/'
 
@@ -226,7 +236,20 @@ print(test_class_name)
 
 # define dataloader to load images
 # batch_size = 32
-batch_size = 24
+
+# # resnet18 
+# batch_size = 24
+
+
+# # resnet34
+# batch_size = 24
+
+# # vgg 16
+batch_size = 16
+
+# # resnet152
+# batch_size = 4
+
 dset_loaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size,
                                                shuffle=True, num_workers=4)
                 for x in ['train', 'test']
@@ -271,7 +294,27 @@ fix_param = True
 # imshow(out, title=[train_class_name[x] for x in classes])
 
 # 定义一个提前训练好参数的res18模型
+# transfer_model = models.resnet18(pretrained=True)
+
+# 预定义模型
+# AlexNet: AlexNet variant from the “One weird trick” paper.
+# VGG: VGG-11, VGG-13, VGG-16, VGG-19 (with and without batch normalization)
+# ResNet: ResNet-18, ResNet-34, ResNet-50, ResNet-101, ResNet-152
+# SqueezeNet: SqueezeNet 1.0, and SqueezeNet 1.1
+
 transfer_model = models.resnet18(pretrained=True)
+
+# transfer_model = models.vgg16(pretrained=True)
+# transfer_model = models.vgg19(pretrained=True)
+
+# transfer_model = models.resnet34(pretrained=True)
+# transfer_model = models.resnet50(pretrained=True)
+# transfer_model = models.resnet101(pretrained=True)
+# transfer_model = models.resnet152(pretrained=True)
+
+
+# os._exit(0)
+
 # transfer_model = CNN()
 
 # if fix_param:
@@ -299,7 +342,7 @@ criterion = nn.CrossEntropyLoss()
 # criterion = nn.MultiLabelMarginLoss()
 
 # start train
-# num_epoch = 30
+num_epoch = 1
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):
@@ -309,15 +352,76 @@ criterion = nn.CrossEntropyLoss()
 #     break
 # exit()
 
-# # 保存和加载整个模型
-# torch.save(model_object, 'model.pkl')
-# model = torch.load('model.pkl')
+for epoch in range(num_epoch):
+    print('{}/{}'.format(epoch + 1, num_epoch))
+    print('*' * 10)
+    print('Train')
+    transfer_model.train()
+    running_loss = 0.0
+    running_acc = 0.0
+    since = time.time()
+    for i, data in enumerate(dset_loaders['train'], 1):
+        img, label = data
+        if use_gpu:
+            img = img.cuda()
+            label = label.cuda()
+        img = Variable(img)
+        label = Variable(label)
+        # print("img == ")
+        # print(img)
+        # print("label == ")
+        # print(label)
+        # exit()
+        # forward
+        out = transfer_model(img)
+        # print("out == ")
+        # print(out)
 
-# 仅保存和加载模型参数(推荐使用)
-# torch.save(model_object.state_dict(), 'params.pkl')
-transfer_model = models.resnet18(pretrained=True)
-transfer_model.load_state_dict(torch.load(os.path.join(root_dir, 'model_save') + '/resnet18.pth'))
+        # exit()
+        loss = criterion(out, label)
+        # print(loss)
+        # exit()
+        _, pred = torch.max(out, 1)
 
+        # backward
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        running_loss += loss.data[0] * label.size(0)
+        num_correct = torch.sum(pred == label)
+        running_acc += num_correct.data[0]
+        if i % 100 == 0:
+            print('Loss: {:.6f}, Acc: {:.4f}'.format(running_loss / (
+                i * batch_size), running_acc / (i * batch_size)))
+    running_loss /= data_size['train']
+    running_acc /= data_size['train']
+    elips_time = time.time() - since
+    print('Loss: {:.6f}, Acc: {:.4f}, Time: {:.0f}s'.format(
+        running_loss, running_acc, elips_time))
+    # print('Validation')
+    # transfer_model.eval()
+    # num_correct = 0.0
+    # total = 0.0
+    # eval_loss = 0.0
+    # for data in dset_loaders['test']:
+    #     img, label = data
+    #     img = Variable(img, volatile=True)
+    #     label = Variable(label, volatile=True)
+    #     if use_gpu:
+    #         img = img.cuda()
+    #         label = label.cuda()
+    #     out = transfer_model(img)
+    #     _, pred = torch.max(out.data, 1)
+    #     loss = criterion(out, label)
+    #     eval_loss += loss.data[0] * label.size(0)
+    #     num_correct += (pred.cpu() == label.data.cpu()).sum()
+    #     total += label.size(0)
+    # print('Loss: {:.6f} Acc: {:.4f}'.format(eval_loss / total, num_correct /
+    #                                         total))
+    # print()
+print('Finish Training!')
+print('start test!')
 transfer_model.eval()
 num_correct = 0.0
 total = 0.0
@@ -326,9 +430,9 @@ for data in dset_loaders['test']:
     img, label = data
     img = Variable(img, volatile=True)
     label = Variable(label, volatile=True)
-    # if use_gpu:
-    #     img = img.cuda()
-    #     label = label.cuda()
+    if use_gpu:
+        img = img.cuda()
+        label = label.cuda()
     out = transfer_model(img)
     # print("test out")
     # print(out.data)
@@ -348,8 +452,8 @@ for data in dset_loaders['test']:
 print('Loss: {:.6f} Acc: {:.4f}'.format(eval_loss / total, num_correct /
                                         total))
 print('end')
-# save_path = os.path.join(root_dir, 'model_save')
-# if not os.path.exists(save_path):
-#     os.mkdir(save_path)
+save_path = os.path.join(root_dir, 'model_save' + '_' +datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+if not os.path.exists(save_path):
+    os.mkdir(save_path)
 # torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
-
+torch.save(transfer_model.state_dict(), save_path + '/resnet152.pth')

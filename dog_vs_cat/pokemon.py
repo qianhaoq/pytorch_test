@@ -12,6 +12,7 @@ import torchvision
 from torchvision import models, transforms, datasets
 from torchvision.datasets import ImageFolder
 
+from datetime import datetime
 
 def create_dir(dir_name):
     if not os.path.exists(dir_name):
@@ -19,7 +20,7 @@ def create_dir(dir_name):
 
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
-root_dir = os.getcwd() + '/pokemon/'
+root_dir = os.getcwd() + '/data/'
 
 # raw_dir = root_dir + 'raw/'
 train_dir = root_dir + 'train/'
@@ -225,7 +226,20 @@ print(test_class_name)
 
 # define dataloader to load images
 # batch_size = 32
+
+# resnet18 
 batch_size = 24
+
+
+# # resnet34
+# batch_size = 24
+
+# # vgg 16
+# batch_size = 16
+
+# # resnet152
+# batch_size = 4
+
 dset_loaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size,
                                                shuffle=True, num_workers=4)
                 for x in ['train', 'test']
@@ -270,7 +284,27 @@ fix_param = True
 # imshow(out, title=[train_class_name[x] for x in classes])
 
 # 定义一个提前训练好参数的res18模型
-transfer_model = models.resnet18(pretrained=True)
+# transfer_model = models.resnet18(pretrained=True)
+
+# 预定义模型
+# AlexNet: AlexNet variant from the “One weird trick” paper.
+# VGG: VGG-11, VGG-13, VGG-16, VGG-19 (with and without batch normalization)
+# ResNet: ResNet-18, ResNet-34, ResNet-50, ResNet-101, ResNet-152
+# SqueezeNet: SqueezeNet 1.0, and SqueezeNet 1.1
+
+# transfer_model = models.resnet18(pretrained=True)
+
+transfer_model = models.vgg16(pretrained=True)
+# transfer_model = models.vgg19(pretrained=True)
+
+# transfer_model = models.resnet34(pretrained=True)
+# transfer_model = models.resnet50(pretrained=True)
+# transfer_model = models.resnet101(pretrained=True)
+# transfer_model = models.resnet152(pretrained=True)
+
+
+# os._exit(0)
+
 # transfer_model = CNN()
 
 # if fix_param:
@@ -298,7 +332,7 @@ criterion = nn.CrossEntropyLoss()
 # criterion = nn.MultiLabelMarginLoss()
 
 # start train
-num_epoch = 30
+num_epoch = 1
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):
@@ -408,7 +442,8 @@ for data in dset_loaders['test']:
 print('Loss: {:.6f} Acc: {:.4f}'.format(eval_loss / total, num_correct /
                                         total))
 print('end')
-save_path = os.path.join(root_dir, 'model_save')
+save_path = os.path.join(root_dir, 'model_save' + '_' +datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 if not os.path.exists(save_path):
     os.mkdir(save_path)
-torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
+# torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
+torch.save(transfer_model.state_dict(), save_path + '/resnet152.pth')

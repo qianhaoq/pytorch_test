@@ -19,6 +19,9 @@ class feature_net(nn.Module):
         elif model == 'resnet152':
             resnet = models.resnet152(pretrained=True)
             self.feature = nn.Sequential(*list(resnet.children())[:-1])
+        elif model == 'resnet18':
+            resnet = models.resnet18(pretrained=True)
+            self.feature = nn.Sequential(*list(resnet.children())[:-1])
 
     def forward(self, x):
         """

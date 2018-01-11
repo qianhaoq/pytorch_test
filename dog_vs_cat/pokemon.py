@@ -20,8 +20,9 @@ def create_dir(dir_name):
 
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
-root_dir = os.getcwd() + '/data/'
+# root_dir = os.getcwd() + '/data/'
 
+root_dir = "/home/qh/data/"
 # raw_dir = root_dir + 'raw/'
 train_dir = root_dir + 'train/'
 # 验证集图片文件夹

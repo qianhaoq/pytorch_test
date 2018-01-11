@@ -13,6 +13,8 @@ from torchvision import models, transforms, datasets
 from torchvision.datasets import ImageFolder
 from PIL import Image,ImageFile
 from datetime import datetime
+from net import feature_net
+
 # solved error:image file is truncated
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -20,31 +22,44 @@ def create_dir(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
+import warnings
+warnings.filterwarnings('ignore')
+
+
 def pil_loader(path):
 # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
     with open(path, 'rb') as f:
         with Image.open(f) as img:
             return img.convert('RGB')
 
+
+def default_loader(path):
+    with open(path, 'rb') as img:
+        return Image.open(img)
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
-root_dir = os.getcwd() + '/data/'
+# root_dir = os.getcwd() + '/data/'
+root_dir = "/home/qh/data/"
+# root_dir = "/home/qh/test/data/"
 
-# raw_dir = root_dir + 'raw/'
+
 train_dir = root_dir + 'train/'
+# train_dir = root_dir + 'ttt/'
+
+
 # train_dir = '/home/qh/git/comic_crawler/scrawler/pokemon_data/'
 
 # 验证集图片文件夹
 test_dir = root_dir + 'test/'
 
 # 将 （1-rate） * 训练图片作为测试集
-rate = 0.9
+# rate = 0.9
 
 # 判断训练集文件夹是否存在，不存在则创建
-create_dir(train_dir)
+# create_dir(train_dir)
 
 # 判断测试集文件夹是否存在，不存在则创建
-create_dir(test_dir)
+# create_dir(test_dir)
 
 # 预处理，将train的图片分别移到dog和cat下
 # train_dog_dir = train_dir + 'dog/'
@@ -106,89 +121,89 @@ create_dir(test_dir)
 #     plt.pause(99)  # pause a bit so that plots are updated
 
 # CNN Model (2 conv layer)
-class CNN(nn.Module):
-    def __init__(self):
-        super(CNN, self).__init__()
-        self.layer1 = nn.Sequential(
-            # 32 * 3 * 256 * 256
-            # 输入深度3,输出深度16,卷积核大小3*3,0个像素点的填充
-            nn.Conv2d(3, 16, kernel_size=3),  # b, 16, 254, 254
-            nn.BatchNorm2d(16),
-            nn.ReLU(inplace=True))
+# class CNN(nn.Module):
+#     def __init__(self):
+#         super(CNN, self).__init__()
+#         self.layer1 = nn.Sequential(
+#             # 32 * 3 * 256 * 256
+#             # 输入深度3,输出深度16,卷积核大小3*3,0个像素点的填充
+#             nn.Conv2d(3, 16, kernel_size=3),  # b, 16, 254, 254
+#             nn.BatchNorm2d(16),
+#             nn.ReLU(inplace=True))
 
-        self.layer2 = nn.Sequential(
-            # 16 * 254 * 254
-            nn.Conv2d(16, 32, kernel_size=3),  # b, 32, 252, 252
-            nn.BatchNorm2d(32),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2)  #b, 32, 126, 126
-        )
-        self.layer3 = nn.Sequential(
-            nn.Conv2d(32, 64, kernel_size=3),  #b, 64, 124, 124
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True))
+#         self.layer2 = nn.Sequential(
+#             # 16 * 254 * 254
+#             nn.Conv2d(16, 32, kernel_size=3),  # b, 32, 252, 252
+#             nn.BatchNorm2d(32),
+#             nn.ReLU(inplace=True),
+#             nn.MaxPool2d(kernel_size=2, stride=2)  #b, 32, 126, 126
+#         )
+#         self.layer3 = nn.Sequential(
+#             nn.Conv2d(32, 64, kernel_size=3),  #b, 64, 124, 124
+#             nn.BatchNorm2d(64),
+#             nn.ReLU(inplace=True))
 
-        self.layer4 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3),  #b, 128, 122, 122
-            nn.BatchNorm2d(128),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=20)  #b, 128, 61, 61
-        )
+#         self.layer4 = nn.Sequential(
+#             nn.Conv2d(64, 128, kernel_size=3),  #b, 128, 122, 122
+#             nn.BatchNorm2d(128),
+#             nn.ReLU(inplace=True),
+#             nn.MaxPool2d(kernel_size=2, stride=20)  #b, 128, 61, 61
+#         )
 
-        self.fc = nn.Sequential(
-            # nn.Linear(128, 10)
+#         self.fc = nn.Sequential(
+#             # nn.Linear(128, 10)
             
-            nn.Linear(128 * 7 * 7, 1024),
-            nn.ReLU(inplace=True),
-            nn.Linear(1024, 128),
-            nn.ReLU(inplace=True),
-            nn.Linear(128, 10)
-        )
+#             nn.Linear(128 * 7 * 7, 1024),
+#             nn.ReLU(inplace=True),
+#             nn.Linear(1024, 128),
+#             nn.ReLU(inplace=True),
+#             nn.Linear(128, 10)
+#         )
 
-        self.avg_pool = nn.AvgPool2d(7)
+#         self.avg_pool = nn.AvgPool2d(7)
 
 
-    def forward(self, x):
-        # print("before " + "="*40)
-        # print(x)
-        # print("layer1 " + "="*40)
-        # x = self.layer1(x)
-        # print(x)
-        # print("layer2 " + "="*40)
-        # x = self.layer2(x)
-        # print(x)
-        # print("layer3 " + "="*40)
-        # x = self.layer3(x)
-        # print(x)
-        # print("layer4 " + "="*40)
-        # x = self.layer4(x)
-        # print(x)
-        # print("avg_pool " + "="*40)
-        # x = self.avg_pool(x)
-        # print(x)
-        # print("x.view " + "="*40)
-        # x = x.view(x.size(0), -1)
-        # print(x)
-        # print("="*40)
-        # exit()
-        # x = self.fc(x)
-        # return x
+#     def forward(self, x):
+#         # print("before " + "="*40)
+#         # print(x)
+#         # print("layer1 " + "="*40)
+#         # x = self.layer1(x)
+#         # print(x)
+#         # print("layer2 " + "="*40)
+#         # x = self.layer2(x)
+#         # print(x)
+#         # print("layer3 " + "="*40)
+#         # x = self.layer3(x)
+#         # print(x)
+#         # print("layer4 " + "="*40)
+#         # x = self.layer4(x)
+#         # print(x)
+#         # print("avg_pool " + "="*40)
+#         # x = self.avg_pool(x)
+#         # print(x)
+#         # print("x.view " + "="*40)
+#         # x = x.view(x.size(0), -1)
+#         # print(x)
+#         # print("="*40)
+#         # exit()
+#         # x = self.fc(x)
+#         # return x
 
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
-        # x = self.avg_pool(x)
-        # print(x)
-        # print("="*40)        
-        x = x.view(x.size(0), -1)
-        # print(x)
-        # print("="*40)
+#         x = self.layer1(x)
+#         x = self.layer2(x)
+#         x = self.layer3(x)
+#         x = self.layer4(x)
+#         # x = self.avg_pool(x)
+#         # print(x)
+#         # print("="*40)        
+#         x = x.view(x.size(0), -1)
+#         # print(x)
+#         # print("="*40)
 
-        x = self.fc(x)
-        # print(x)
-        # exit()
-        return x
+#         x = self.fc(x)
+#         # print(x)
+#         # exit()
+#         return x
 
 # pre_process()
 # 定义transforms
@@ -198,7 +213,7 @@ data_transforms = {
     transforms.Compose([
         # Crop the given PIL.Image to random size and aspect ratio
         # 随机裁剪原图并转换到指定的大小
-        transforms.RandomSizedCrop(256),
+        transforms.RandomResizedCrop(256),
         # 50%概率水平翻转
         transforms.RandomHorizontalFlip(),
         # 将pil图片转化为tensor
@@ -211,7 +226,7 @@ data_transforms = {
     transforms.Compose([
         # Crop the given PIL.Image to random size and aspect ratio
         # 随机裁剪原图并转换到指定的大小
-        transforms.RandomSizedCrop(256),
+        transforms.RandomResizedCrop(256),
         # 50%概率水平翻转
         transforms.RandomHorizontalFlip(),
         # 将pil图片转化为tensor
@@ -225,7 +240,7 @@ data_transforms = {
 # define datasets
 image_datasets = {
     x: datasets.ImageFolder(os.path.join(root_dir, x),
-                            data_transforms[x])
+                            data_transforms[x],loader = pil_loader)
     for x in ['train', 'test']
 }
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
@@ -302,7 +317,8 @@ fix_param = True
 # ResNet: ResNet-18, ResNet-34, ResNet-50, ResNet-101, ResNet-152
 # SqueezeNet: SqueezeNet 1.0, and SqueezeNet 1.1
 
-transfer_model = models.resnet18(pretrained=True)
+# transfer_model = models.resnet18(pretrained=True)
+transfer_model = feature_net("resnet18")
 
 # transfer_model = models.vgg16(pretrained=True)
 # transfer_model = models.vgg19(pretrained=True)
@@ -342,7 +358,7 @@ criterion = nn.CrossEntropyLoss()
 # criterion = nn.MultiLabelMarginLoss()
 
 # start train
-num_epoch = 1
+num_epoch = 5
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):

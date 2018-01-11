@@ -21,7 +21,8 @@ def create_dir(dir_name):
         os.makedirs(dir_name)
 
 # 定义数据路径
-root_dir = os.getcwd() + '/data/'
+# root_dir = os.getcwd() + '/data/'
+root_dir = "/home/qh/data/"
 
 train_dir = root_dir + 'train/'
 # 验证集图片文件夹
@@ -42,7 +43,7 @@ class CNN(nn.Module):
             # 输入深度3,输出深度16,卷积核大小3*3,0个像素点的填充
             nn.Conv2d(3, 16, kernel_size=3),  # b, 16, 254, 254
             nn.BatchNorm2d(16),
-            nn.ReLU(inplace=True))
+                qnn.ReLU(inplace=True))
 
         self.layer2 = nn.Sequential(
             # 16 * 254 * 254
@@ -173,7 +174,7 @@ print(test_class_name)
 # batch_size = 24
 
 # # vgg 16
-batch_size = 16
+batch_size = 4
 
 # # resnet152
 # batch_size = 4

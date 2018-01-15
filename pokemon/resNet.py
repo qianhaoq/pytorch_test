@@ -320,6 +320,7 @@ fix_param = True
 # transfer_model = models.resnet18(pretrained=True)
 transfer_model = feature_net("resnet18")
 
+
 # transfer_model = models.vgg16(pretrained=True)
 # transfer_model = models.vgg19(pretrained=True)
 
@@ -358,7 +359,7 @@ criterion = nn.CrossEntropyLoss()
 # criterion = nn.MultiLabelMarginLoss()
 
 # start train
-num_epoch = 5
+num_epoch = 25
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):

@@ -168,7 +168,7 @@ fix_param = True
 
 # transfer_model = models.resnet18(pretrained=True)
 transfer_model = feature_net("resnet18")
-transfer_model.load_state_dict(torch.load('/home/qh/data/model_new/resnet18.pth'))
+transfer_model.load_state_dict(torch.load('/root/data/model_new/resnet18.pth'))
 # load_model = torch.load('/home/qh/data/model_save_2018-01-13 10:33:49/resnet152.pth')
 # transfer_model = load_model
 # transfer_model = models.vgg16(pretrained=True)
@@ -329,4 +329,4 @@ if not os.path.exists(save_path):
     os.mkdir(save_path)
 # torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
 # torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
-torch.save(transfer_model.state_dict(), '/home/qh/data/model_new/resnet18.pth')
+torch.save(transfer_model.state_dict(), '/root/data/model_new/resnet18.pth')

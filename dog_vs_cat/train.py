@@ -277,7 +277,7 @@ for epoch in range(num_epoch):
     print()
 print('Finish Training!')
 print()
-# save_path = os.path.join(root, 'model_save')
-# if not os.path.exists(save_path):
-#     os.mkdir(save_path)
-# torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
+save_path = os.path.join(root, 'model_save')
+if not os.path.exists(save_path):
+    os.mkdir(save_path)
+torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')

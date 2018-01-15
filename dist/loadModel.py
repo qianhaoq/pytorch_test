@@ -39,7 +39,7 @@ def default_loader(path):
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
 # root_dir = os.getcwd() + '/data/'
-root_dir = "/home/qh/data/"
+root_dir = "/root/data/"
 # root_dir = "/home/qh/test/data/"
 
 

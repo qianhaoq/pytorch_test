@@ -1,4 +1,5 @@
 # _author = qh
+import sys
 import os
 import shutil
 import time
@@ -14,6 +15,9 @@ from torchvision.datasets import ImageFolder
 from PIL import Image,ImageFile
 from datetime import datetime
 from net import feature_net
+
+
+para_list = ['vgg16', 'vgg19', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152']
 
 # solved error:image file is truncated
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -36,6 +40,14 @@ def pil_loader(path):
 def default_loader(path):
     with open(path, 'rb') as img:
         return Image.open(img)
+
+model_name = sys.argv[1]
+if model_name not in para_list:
+    print('input error!')
+    exit(1)
+print("start with " + model_name)
+
+# exit()
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
 # root_dir = os.getcwd() + '/data/'
@@ -166,18 +178,11 @@ fix_param = True
 # ResNet: ResNet-18, ResNet-34, ResNet-50, ResNet-101, ResNet-152
 # SqueezeNet: SqueezeNet 1.0, and SqueezeNet 1.1
 
-# transfer_model = models.resnet18(pretrained=True)
-transfer_model = feature_net("resnet18")
-transfer_model.load_state_dict(torch.load('/root/model/resnet18.pth'))
-# load_model = torch.load('/home/qh/data/model_save_2018-01-13 10:33:49/resnet152.pth')
-# transfer_model = load_model
-# transfer_model = models.vgg16(pretrained=True)
-# transfer_model = models.vgg19(pretrained=True)
-
-# transfer_model = models.resnet34(pretrained=True)
-# transfer_model = models.resnet50(pretrained=True)
-# transfer_model = models.resnet101(pretrained=True)
-# transfer_model = models.resnet152(pretrained=True)
+transfer_model = feature_net(model_name)
+try:
+    transfer_model.load_state_dict(torch.load('/root/model/' + model_name + '.pth'))
+except:
+    flag = 1
 
 
 # os._exit(0)
@@ -209,7 +214,7 @@ criterion = nn.CrossEntropyLoss()
 # criterion = nn.MultiLabelMarginLoss()
 
 # start train
-num_epoch = 10
+num_epoch = 20
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):

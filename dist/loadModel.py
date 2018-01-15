@@ -331,9 +331,9 @@ for data in dset_loaders['test']:
 print('Loss: {:.6f} Acc: {:.4f}'.format(eval_loss / total, num_correct /
                                         total))
 print('end')
-save_path = os.path.join(root_dir, 'model_save' + '_' +datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-if not os.path.exists(save_path):
-    os.mkdir(save_path)
-# torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
-# torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
-torch.save(transfer_model.state_dict(), '/root/model/resnet18.pth')
+# save_path = os.path.join(root_dir, 'model_save' + '_' +datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+# if not os.path.exists(save_path):
+#     os.mkdir(save_path)
+
+torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth')
+torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth' + +datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))

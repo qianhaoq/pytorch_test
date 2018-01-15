@@ -266,6 +266,7 @@ for epoch in range(num_epoch):
     elips_time = time.time() - since
     print('Loss: {:.6f}, Acc: {:.4f}, Time: {:.0f}s'.format(
         running_loss, running_acc, elips_time))
+    torch.save(transfer_model.state_dict(), '/root/data/model_new/resnet18.pth')
     # print('Validation')
     # transfer_model.eval()
     # num_correct = 0.0

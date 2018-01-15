@@ -209,7 +209,7 @@ criterion = nn.CrossEntropyLoss()
 # criterion = nn.MultiLabelMarginLoss()
 
 # start train
-num_epoch = 25
+num_epoch = 100
 
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):
@@ -266,7 +266,8 @@ for epoch in range(num_epoch):
     elips_time = time.time() - since
     print('Loss: {:.6f}, Acc: {:.4f}, Time: {:.0f}s'.format(
         running_loss, running_acc, elips_time))
-    torch.save(transfer_model.state_dict(), '/root/model/resnet18.pth')
+    if epoch % 10 == 0:
+        torch.save(transfer_model.state_dict(), '/root/model/resnet18.pth' + str(running_acc))
     # print('Validation')
     # transfer_model.eval()
     # num_correct = 0.0

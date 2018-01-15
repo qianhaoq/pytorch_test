@@ -111,18 +111,24 @@ test_class_name = image_datasets['test'].classes
 print(train_class_name)
 print(test_class_name)
 
+batch_size = 24
+
 # define dataloader to load images
 # batch_size = 32
 
-# # resnet18 
-# batch_size = 24
+# # resnet18
+if model_name == "resnet18":
+    batch_size = 24
 
+elif model_name == "vgg16":
+    batch_size = 12
 
 # # resnet34
 # batch_size = 24
 
 # # vgg 16
-batch_size = 16
+
+# batch_size = 24
 
 # # resnet152
 # batch_size = 4

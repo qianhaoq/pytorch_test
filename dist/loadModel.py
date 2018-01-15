@@ -121,7 +121,7 @@ if model_name == "resnet18":
     batch_size = 24
 
 elif model_name == "vgg16":
-    batch_size = 12
+    batch_size = 16
 
 # # resnet34
 # batch_size = 24

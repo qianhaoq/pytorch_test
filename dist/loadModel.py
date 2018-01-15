@@ -42,6 +42,7 @@ def default_loader(path):
         return Image.open(img)
 
 model_name = sys.argv[1]
+
 if model_name not in para_list:
     print('input error!')
     exit(1)
@@ -215,7 +216,9 @@ criterion = nn.CrossEntropyLoss()
 
 # start train
 num_epoch = 20
-
+if len(sys.argv) > 2 :
+    num_epoch = int(sys.argv[2])
+print('total epoch = ' + str(num_epoch))
 # print(dset_loaders['train'])
 # for i, data in enumerate(dset_loaders['train'], 1):
 #     print(i)

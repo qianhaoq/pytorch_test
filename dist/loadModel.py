@@ -39,7 +39,7 @@ def default_loader(path):
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
 # root_dir = os.getcwd() + '/data/'
-root_dir = "/root/data/"
+root_dir = "/mnt/data/"
 # root_dir = "/home/qh/test/data/"
 
 
@@ -168,7 +168,7 @@ fix_param = True
 
 # transfer_model = models.resnet18(pretrained=True)
 transfer_model = feature_net("resnet18")
-transfer_model.load_state_dict(torch.load('/root/data/model_new/resnet18.pth'))
+transfer_model.load_state_dict(torch.load('/root/model/resnet18.pth'))
 # load_model = torch.load('/home/qh/data/model_save_2018-01-13 10:33:49/resnet152.pth')
 # transfer_model = load_model
 # transfer_model = models.vgg16(pretrained=True)
@@ -266,7 +266,7 @@ for epoch in range(num_epoch):
     elips_time = time.time() - since
     print('Loss: {:.6f}, Acc: {:.4f}, Time: {:.0f}s'.format(
         running_loss, running_acc, elips_time))
-    torch.save(transfer_model.state_dict(), '/root/data/model_new/resnet18.pth')
+    torch.save(transfer_model.state_dict(), '/root/model/resnet18.pth')
     # print('Validation')
     # transfer_model.eval()
     # num_correct = 0.0
@@ -330,4 +330,4 @@ if not os.path.exists(save_path):
     os.mkdir(save_path)
 # torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
 # torch.save(transfer_model.state_dict(), save_path + '/resnet18.pth')
-torch.save(transfer_model.state_dict(), '/root/data/model_new/resnet18.pth')
+torch.save(transfer_model.state_dict(), '/root/model/resnet18.pth')

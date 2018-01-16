@@ -52,7 +52,7 @@ print("start with " + model_name)
 # 定义数据路径
 # root_dir = os.getcwd() + '/data/'
 # root_dir = os.getcwd() + '/data/'
-root_dir = "/root/data/"
+root_dir = "/home/qh/data/"
 # root_dir = "/home/qh/test/data/"
 
 
@@ -187,7 +187,7 @@ fix_param = True
 
 transfer_model = feature_net(model_name)
 try:
-    transfer_model.load_state_dict(torch.load('/root/model/' + model_name + '.pth'))
+    transfer_model.load_state_dict(torch.load('/home/qh/model/' + model_name + '.pth'))
 except:
     flag = 1
 
@@ -344,5 +344,5 @@ print('end')
 # if not os.path.exists(save_path):
 #     os.mkdir(save_path)
 
-torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth')
-torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth' + +datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
+torch.save(transfer_model.state_dict(), '/home/qh/model/' + model_name + '.pth')
+# torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth' + +datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))

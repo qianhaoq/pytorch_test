@@ -275,6 +275,8 @@ for epoch in range(num_epoch):
         if i % 100 == 0:
             print('Loss: {:.6f}, Acc: {:.4f}'.format(running_loss / (
                 i * batch_size), running_acc / (i * batch_size)))
+            torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth')
+
     running_loss /= data_size['train']
     running_acc /= data_size['train']
     elips_time = time.time() - since

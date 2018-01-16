@@ -345,4 +345,4 @@ print('end')
 #     os.mkdir(save_path)
 
 torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth')
-torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth' + +datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
+# torch.save(transfer_model.state_dict(), '/root/model/' + model_name + '.pth' + +datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))

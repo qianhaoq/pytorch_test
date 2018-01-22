@@ -66,7 +66,7 @@ train_dir = root_dir + 'train/'
 test_dir = root_dir + 'test/'
 
 
-
+create_dir('/root/model/')
 # pre_process()
 # 定义transforms
 # Transforms are common image transforms.

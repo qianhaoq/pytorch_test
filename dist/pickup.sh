@@ -18,7 +18,7 @@ pickup_path="${home_path}/data/train/"
 # 清除上次pickup文件
 rm -r ${pickup_path}/*
 
-for i in `seq -f "%03g" 002`
+for i in `seq -f "%03g" 802`
 do
     cd ${data_path}/${i}
     mkdir ${pickup_path}/${i}

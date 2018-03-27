@@ -4,6 +4,8 @@ import os
 import shutil
 import time
 import numpy as np
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import torch
 from torch import optim, nn
@@ -31,7 +33,7 @@ para_dict['resnet101'] = resnet101()
 para_dict['resnet152'] = resnet152()
 para_dict['vgg16'] = vgg16()
 para_dict['vgg19'] = vgg19()
-# solved error:image file is truncated
+# solved error:image file is truncatedmpl.use('Agg')  
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def create_dir(dir_name):
@@ -294,7 +296,7 @@ for idx, optimizer in enumerate(optimizers):
             running_loss += loss.data[0] * label.size(0)
             num_correct = torch.sum(pred == label)
             # print(running_acc)
-            running_acc += num_correct.data[0]
+            running_acc += float(num_correct.data[0])
             # if i % 100 == 0:
             #     print('Loss: {:.6f}, Acc: {:.4f}'.format(running_loss / (
             #         i * batch_size), running_acc / (i * batch_size)))

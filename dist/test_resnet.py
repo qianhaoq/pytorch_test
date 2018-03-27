@@ -21,9 +21,6 @@ from resnet import resnet18, resnet34, resnet50, resnet101, resnet152
 from vgg import vgg16, vgg19, vgg11
 from alexnet import alexnet
 
-# plt.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
-# plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
-# from net import resnet
 
 para_list = ['vgg16', 'vgg19', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152']
 para_dict = {}
@@ -195,7 +192,7 @@ model_resnet34 = resnet34().cuda()
 model_resnet50 = resnet50().cuda()
 
 # model_Adamax = vgg16().cuda()
-# model_Adamax = vgg16().cuda()
+# model_Adamax = vgg16().cuda()root_dir = "/home/qh/tmp_data"
 
 # opt_SGD         = torch.optim.SGD(model_SGD.parameters(), lr=LR)
 # opt_Momentum    = torch.optim.SGD(model_Momentum.parameters(), lr=LR, momentum=0.8)
@@ -296,7 +293,7 @@ for idx, optimizer in enumerate(optimizers):
             # print(pred+1)
             running_loss += loss.data[0] * label.size(0)
             num_correct = torch.sum(pred == label)
-            print(running_acc)
+            # print(running_acc)
             running_acc += num_correct.data[0]
             # if i % 100 == 0:
             #     print('Loss: {:.6f}, Acc: {:.4f}'.format(running_loss / (
@@ -347,28 +344,28 @@ for idx, optimizer in enumerate(optimizers):
 # exit()
 x = [x for x in range(0, num_epoch+1)]
 
-fig1 = plt.figure("不同模型与损失值的关系")
-ax1 = fig1.add_subplot(111)
+# fig1 = plt.figure("不同模型与损失值的关系")
+# ax1 = fig1.add_subplot(111)
 for e in range(len(optimizers)):
-    ax1.plot(x, loss_plot[e], label=opt_name[e])
+    plt.plot(x, loss_plot[e], label=opt_name[e])
 plt.title("不同模型与损失值的关系")
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend()
 plt.savefig("不同模型与损失值的关系.png")  
-
+plt. close(0)
 # fig1.plot(x, y)
 
-fig2 = plt.figure("不同模型与准确率的关系")
-ax2 = fig2.add_subplot(111)
+# fig2 = plt.figure("不同模型与准确率的关系")
+# ax2 = fig2.add_subplot(111)
 for e in range(len(optimizers)):
-    ax2.plot(x, acc_plot[e], label=opt_name[e])
+    plt.plot(x, acc_plot[e], label=opt_name[e])
 plt.title("不同模型与准确率的关系")
 plt.ylabel('Acc')
 plt.xlabel('epoch')
 plt.legend()
 plt.savefig("不同模型与准确率的关系.png")  
-
+plt. close(0)
 # plt.show()
 
 # ax2 = fig2.add_subplot(111)

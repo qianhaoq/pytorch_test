@@ -59,7 +59,8 @@ def default_loader(path):
 model_name = sys.argv[1]
 
 
-root_dir = "/home/qh/tmp_data"
+# root_dir = "/home/qh/tmp_data"
+root_dir = "/root/tmp_data"
 # root_dir = "/home/qh/test/data/"
 
 def conv3x3(in_channel, out_channel, stride=1):
@@ -295,6 +296,7 @@ for idx, optimizer in enumerate(optimizers):
             # print(pred+1)
             running_loss += loss.data[0] * label.size(0)
             num_correct = torch.sum(pred == label)
+            print(running_acc)
             running_acc += num_correct.data[0]
             # if i % 100 == 0:
             #     print('Loss: {:.6f}, Acc: {:.4f}'.format(running_loss / (

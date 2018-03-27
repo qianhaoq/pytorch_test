@@ -21,6 +21,8 @@ from resnet import resnet18, resnet34, resnet50, resnet101, resnet152
 from vgg import vgg16, vgg19, vgg11
 from alexnet import alexnet
 
+# plt.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
+# plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 # from net import resnet
 
 para_list = ['vgg16', 'vgg19', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152']
@@ -347,6 +349,7 @@ fig1 = plt.figure("不同模型与损失值的关系")
 ax1 = fig1.add_subplot(111)
 for e in range(len(optimizers)):
     ax1.plot(x, loss_plot[e], label=opt_name[e])
+plt.title("不同模型与损失值的关系")
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend()
@@ -358,6 +361,7 @@ fig2 = plt.figure("不同模型与准确率的关系")
 ax2 = fig2.add_subplot(111)
 for e in range(len(optimizers)):
     ax2.plot(x, acc_plot[e], label=opt_name[e])
+plt.title("不同模型与准确率的关系")
 plt.ylabel('Acc')
 plt.xlabel('epoch')
 plt.legend()

@@ -22,7 +22,7 @@ from resnet import resnet18, resnet34, resnet50, resnet101, resnet152
 # vgg out of memory
 from vgg import vgg16, vgg19, vgg11
 from alexnet import alexnet
-
+import random
 
 para_list = ['vgg16', 'vgg19', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152']
 para_dict = {}
@@ -309,6 +309,8 @@ for idx, optimizer in enumerate(optimizers):
             #     torch.save(transfer_model.state_dict(), '/home/qh/model/' + model_name + '.pth')
 
         running_loss /= data_size['train']
+        if running_loss > 10:
+            running_loss = 10 
         running_acc /= data_size['train']
         loss_list.append(running_loss)
         acc_list.append(running_acc)

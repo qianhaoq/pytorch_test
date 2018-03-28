@@ -253,7 +253,7 @@ for idx, optimizer in enumerate(optimizers):
     acc_list = []
     # acc_list.append(0)
     loss_list = []
-    # loss_list.append(9)
+    # loss_list.append(10)
     for epoch in range(num_epoch):
         print('{}/{}'.format(epoch + 1, num_epoch))
         print('*' * 10)
@@ -352,7 +352,7 @@ for idx, optimizer in enumerate(optimizers):
 # print(loss_plot)
 # print(acc_plot)
 # exit()
-x = [x for x in range(0, num_epoch+1)]
+x = [x for x in range(0, num_epoch)]
 
 fig1 = plt.figure("不同模型与损失值的关系")
 ax1 = fig1.add_subplot(111)

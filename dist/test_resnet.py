@@ -350,22 +350,21 @@ for idx, optimizer in enumerate(optimizers):
 # exit()
 x = [x for x in range(0, num_epoch+1)]
 
-# fig1 = plt.figure("不同模型与损失值的关系")
-# ax1 = fig1.add_subplot(111)
+fig1 = plt.figure("不同模型与损失值的关系")
+ax1 = fig1.add_subplot(111)
 for e in range(len(optimizers)):
-    plt.plot(x, loss_plot[e], label=opt_name[e])
+    ax1.plot(x, loss_plot[e], label=opt_name[e])
 plt.title("不同模型与损失值的关系")
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend()
 plt.savefig("不同模型与损失值的关系.png")  
 plt. close(0)
-# fig1.plot(x, y)
 
-# fig2 = plt.figure("不同模型与准确率的关系")
-# ax2 = fig2.add_subplot(111)
+fig2 = plt.figure("不同模型与准确率的关系")
+ax2 = fig2.add_subplot(111)
 for e in range(len(optimizers)):
-    plt.plot(x, acc_plot[e], label=opt_name[e])
+    ax2.plot(x, acc_plot[e], label=opt_name[e])
 plt.title("不同模型与准确率的关系")
 plt.ylabel('Acc')
 plt.xlabel('epoch')

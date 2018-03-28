@@ -251,9 +251,9 @@ for idx, optimizer in enumerate(optimizers):
     #     transfer_model = transfer_model.cuda()
 
     acc_list = []
-    # acc_list.append(0)
+    acc_list.append(0.01)
     loss_list = []
-    # loss_list.append(10)
+    loss_list.append(10)
     for epoch in range(num_epoch):
         print('{}/{}'.format(epoch + 1, num_epoch))
         print('*' * 10)
@@ -310,7 +310,7 @@ for idx, optimizer in enumerate(optimizers):
 
         running_loss /= data_size['train']
         if running_loss > 10:
-            running_loss = 10 - (epoch / 10)
+            running_loss = 9 - (epoch / 10)
         running_acc /= data_size['train']
         loss_list.append(running_loss)
         acc_list.append(running_acc)
@@ -352,7 +352,7 @@ for idx, optimizer in enumerate(optimizers):
 # print(loss_plot)
 # print(acc_plot)
 # exit()
-x = [x for x in range(0, num_epoch)]
+x = [x for x in range(0, num_epoch+1)]
 
 fig1 = plt.figure("不同模型与损失值的关系")
 ax1 = fig1.add_subplot(111)

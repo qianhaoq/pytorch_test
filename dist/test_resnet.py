@@ -189,6 +189,7 @@ LR = 1e-3
 # model_SGD = vgg16().cuda()
 # model_Momentum = vgg16().cuda()
 # model_RMSprop = vgg16().cuda()
+model_alexnet = alexnet().cuda()
 model_vgg16 = vgg16().cuda()
 model_vgg19 = vgg19().cuda()
 model_resnet18 = resnet18().cuda()
@@ -201,6 +202,7 @@ model_resnet50 = resnet50().cuda()
 # opt_SGD         = torch.optim.SGD(model_SGD.parameters(), lr=LR)
 # opt_Momentum    = torch.optim.SGD(model_Momentum.parameters(), lr=LR, momentum=0.8)
 # opt_RMSprop     = torch.optim.RMSprop(model_RMSprop.parameters(), lr=LR, alpha=0.9)
+opt_alexnet = torch.optim.Adam(model_alexnet.parameters(), lr=LR, betas=(0.9, 0.99))
 opt_vgg16     = torch.optim.Adam(model_vgg16.parameters(), lr=LR, betas=(0.9, 0.99))
 opt_vgg19     = torch.optim.Adam(model_vgg19.parameters(), lr=LR, betas=(0.9, 0.99))
 opt_resnet18     = torch.optim.Adam(model_resnet18.parameters(), lr=LR, betas=(0.9, 0.99))
@@ -210,14 +212,14 @@ opt_resnet50     = torch.optim.Adam(model_resnet50.parameters(), lr=LR, betas=(0
 # opt_Adamax = torch.optim.Adamax(model_Adamax.parameters(), lr=LR)
 
 # optimizers = [opt_SGD, opt_Momentum, opt_RMSprop, opt_Adam, opt_Adamax]
-optimizers = [opt_vgg16, opt_vgg19, opt_resnet18, opt_resnet34, opt_resnet50]
+optimizers = [opt_alexnet, opt_vgg16, opt_vgg19, opt_resnet18, opt_resnet34, opt_resnet50]
 
 
 # opt_name = ['SGD', 'Momentum', 'RMSprop', 'Adam', 'Adamax']
-opt_name = ['vgg16', 'vgg19', 'resnet18', 'resnet34', 'resnet50']
+opt_name = ['alexnet', 'vgg16', 'vgg19', 'resnet18', 'resnet34', 'resnet50']
 
 # models_name = [model_SGD, model_Momentum, model_RMSprop, model_Adam, model_Adamax]
-models_name = [model_vgg16, model_vgg19, model_resnet18, model_resnet34, model_resnet50]
+models_name = [model_alexnet, model_vgg16, model_vgg19, model_resnet18, model_resnet34, model_resnet50]
 
 # loss_func = torch.nn.MSELoss()
 
@@ -251,7 +253,7 @@ for idx, optimizer in enumerate(optimizers):
     acc_list = []
     acc_list.append(0)
     loss_list = []
-    loss_list.append(6)
+    loss_list.append(9)
     for epoch in range(num_epoch):
         print('{}/{}'.format(epoch + 1, num_epoch))
         print('*' * 10)

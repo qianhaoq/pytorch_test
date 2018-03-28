@@ -42,6 +42,8 @@ class AlexNet(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
+        print(x)
+        print(x.size(0))
         x = x.view(x.size(0), 256 * 6 * 6)
         print("as")
         print(x)

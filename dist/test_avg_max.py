@@ -197,9 +197,9 @@ model_avgnet18 = avgnet18().cuda()
 model_maxnet18 = maxnet18().cuda()
 
 
-opt_resnet18     = torch.optim.Adam(model_resnet18.parameters(), lr=LR)
-opt_avgnet18     = torch.optim.Adam(model_avgnet18.parameters(), lr=LR)
-opt_maxnet18     = torch.optim.Adam(model_maxnet18.parameters(), lr=LR)
+opt_resnet18     = torch.optim.Adam(model_resnet18.parameters(), lr=LR, betas=(0.9, 0.99))
+opt_avgnet18     = torch.optim.Adam(model_avgnet18.parameters(), lr=LR, betas=(0.9, 0.99))
+opt_maxnet18     = torch.optim.Adam(model_maxnet18.parameters(), lr=LR, betas=(0.9, 0.99))
 
 
 # model_Adamax = vgg16().cuda()

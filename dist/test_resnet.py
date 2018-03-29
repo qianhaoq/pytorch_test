@@ -142,7 +142,7 @@ train_class_name = image_datasets['train'].classes
 test_class_name = image_datasets['test'].classes
 print(train_class_name)
 print(test_class_name)
-batch_size = 6
+batch_size = 16
 
 dset_loaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size,
                                                shuffle=True, num_workers=4)
@@ -189,9 +189,9 @@ LR = 1e-3
 # model_SGD = vgg16().cuda()
 # model_Momentum = vgg16().cuda()
 # model_RMSprop = vgg16().cuda()
-model_alexnet = alexnet().cuda()
-model_vgg16 = vgg16().cuda()
-model_vgg19 = vgg19().cuda()
+#model_alexnet = alexnet().cuda()
+#model_vgg16 = vgg16().cuda()
+#model_vgg19 = vgg19().cuda()
 model_resnet18 = resnet18().cuda()
 model_resnet34 = resnet34().cuda()
 model_resnet50 = resnet50().cuda()
@@ -202,24 +202,28 @@ model_resnet50 = resnet50().cuda()
 # opt_SGD         = torch.optim.SGD(model_SGD.parameters(), lr=LR)
 # opt_Momentum    = torch.optim.SGD(model_Momentum.parameters(), lr=LR, momentum=0.8)
 # opt_RMSprop     = torch.optim.RMSprop(model_RMSprop.parameters(), lr=LR, alpha=0.9)
-opt_alexnet = torch.optim.Adam(model_alexnet.parameters(), lr=LR, betas=(0.9, 0.99))
-opt_vgg16     = torch.optim.Adam(model_vgg16.parameters(), lr=LR, betas=(0.9, 0.99))
-opt_vgg19     = torch.optim.Adam(model_vgg19.parameters(), lr=LR, betas=(0.9, 0.99))
-opt_resnet18     = torch.optim.Adam(model_resnet18.parameters(), lr=LR, betas=(0.9, 0.99))
-opt_resnet34     = torch.optim.Adam(model_resnet34.parameters(), lr=LR, betas=(0.9, 0.99))
-opt_resnet50     = torch.optim.Adam(model_resnet50.parameters(), lr=LR, betas=(0.9, 0.99))
+#opt_alexnet = torch.optim.Adam(model_alexnet.parameters(), lr=LR, betas=(0.9, 0.99))
+#opt_vgg16     = torch.optim.Adam(model_vgg16.parameters(), lr=LR, betas=(0.9, 0.99))
+#opt_vgg19     = torch.optim.Adam(model_vgg19.parameters(), lr=LR, betas=(0.9, 0.99))
+opt_resnet18     = torch.optim.Adam(model_resnet18.parameters(), lr=LR)
+#opt_resnet18     = torch.optim.Adam(model_resnet18.parameters(), lr=LR, betas=(0.9, 0.99))
+opt_resnet34     = torch.optim.Adam(model_resnet34.parameters(), lr=LR)
+#opt_resnet34     = torch.optim.Adam(model_resnet34.parameters(), lr=LR, betas=(0.9, 0.99))
+opt_resnet50     = torch.optim.Adam(model_resnet50.parameters(), lr=LR)
+#opt_resnet50     = torch.optim.Adam(model_resnet50.parameters(), lr=LR, betas=(0.9, 0.99))
 
 # opt_Adamax = torch.optim.Adamax(model_Adamax.parameters(), lr=LR)
 
 # optimizers = [opt_SGD, opt_Momentum, opt_RMSprop, opt_Adam, opt_Adamax]
-optimizers = [opt_alexnet, opt_vgg16, opt_vgg19, opt_resnet18, opt_resnet34, opt_resnet50]
+optimizers = [opt_resnet18, opt_resnet34, opt_resnet50]
 
 
 # opt_name = ['SGD', 'Momentum', 'RMSprop', 'Adam', 'Adamax']
-opt_name = ['alexnet', 'vgg16', 'vgg19', 'resnet18', 'resnet34', 'resnet50']
+opt_name = ['resnet18', 'resnet34', 'resnet50']
 
 # models_name = [model_SGD, model_Momentum, model_RMSprop, model_Adam, model_Adamax]
-models_name = [model_alexnet, model_vgg16, model_vgg19, model_resnet18, model_resnet34, model_resnet50]
+models_name = [model_resnet18, model_resnet34, model_resnet50]
+line_name =  ['-', ':', '-.']
 
 # loss_func = torch.nn.MSELoss()
 
@@ -357,7 +361,7 @@ x = [x for x in range(0, num_epoch+1)]
 fig1 = plt.figure("不同模型与损失值的关系")
 ax1 = fig1.add_subplot(111)
 for e in range(len(optimizers)):
-    ax1.plot(x, loss_plot[e], label=opt_name[e])
+    ax1.plot(x, loss_plot[e], label=opt_name[e], linestyle=line_name[e])
 plt.title("不同模型与损失值的关系")
 plt.ylabel('loss')
 plt.xlabel('epoch')
@@ -368,7 +372,7 @@ plt. close(0)
 fig2 = plt.figure("不同模型与准确率的关系")
 ax2 = fig2.add_subplot(111)
 for e in range(len(optimizers)):
-    ax2.plot(x, acc_plot[e], label=opt_name[e])
+    ax2.plot(x, acc_plot[e], label=opt_name[e], linestyle=line_name[e])
 plt.title("不同模型与准确率的关系")
 plt.ylabel('Acc')
 plt.xlabel('epoch')
